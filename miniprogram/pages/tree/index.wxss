@@ -284,19 +284,17 @@
   color: var(--text3);
 }
 .msg-text {
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  overflow: hidden;
   font-size: 28rpx;
   line-height: 1.75;
   color: var(--text);
   margin-top: 20rpx;
   word-break: break-word;
+  overflow: hidden;
+  /* 用 max-height 代替 -webkit-line-clamp，避免真机上多行折叠导致的布局抖动 */
+  max-height: 147rpx; /* 约 3 行 = 28rpx * 1.75 * 3 */
 }
 .msg-text.open {
-  -webkit-line-clamp: unset;
-  display: block;
+  max-height: none;
 }
 .more {
   font-size: 24rpx;

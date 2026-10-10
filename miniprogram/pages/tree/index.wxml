@@ -71,7 +71,7 @@
         </view>
         <text class="msg-time">{{item.time}}</text>
       </view>
-      <text class="msg-text {{item.expanded ? 'open' : ''}}">{{item.text}}</text>
+      <view class="msg-text {{item.expanded ? 'open' : ''}}">{{item.text}}</view>
       <view wx:if="{{item.canExpand}}" class="more" data-id="{{item.id}}" bindtap="toggleExpand">
         <text>{{item.expanded ? '收起' : '展开'}}</text>
       </view>
