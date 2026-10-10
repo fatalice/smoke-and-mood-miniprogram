@@ -1,0 +1,31 @@
+/* components/ring/index.wxss */
+.ring-wrap {
+  position: relative;
+  width: 344rpx;
+  height: 344rpx;
+  margin: 28rpx auto 4rpx;
+}
+.ring-canvas {
+  width: 344rpx;
+  height: 344rpx;
+}
+.ring-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.ring-num {
+  font-size: 92rpx;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  transition: color 0.3s;
+}
+.ring-label {
+  font-size: 26rpx;
+  color: var(--text3);
+  margin-top: 14rpx;
+}

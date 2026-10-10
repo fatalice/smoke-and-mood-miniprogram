@@ -1,0 +1,8 @@
+<!--components/sheet/index.wxml-->
+<view class="sheet-mask {{show ? 'open' : ''}}" bindtap="onMask" catchtouchmove="stop"></view>
+<view class="sheet {{show ? 'open' : ''}}" catchtouchmove="stop">
+  <view class="grab"></view>
+  <view wx:if="{{title}}" class="sheet-title">{{title}}</view>
+  <view wx:if="{{sub}}" class="sheet-sub">{{sub}}</view>
+  <slot></slot>
+</view>

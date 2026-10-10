@@ -1,0 +1,13 @@
+# 依赖
+node_modules/
+miniprogram_npm/
+
+# IDE / 系统
+.DS_Store
+Thumbs.db
+*.log
+
+# 微信开发者工具本地私有配置（本地 IDE 状态，不提交）
+project.private.config.json
+# 微信云开发本地缓存
+.cloudbase/

@@ -1,0 +1,9 @@
+{
+  "desc": "戒烟树洞小程序 sitemap",
+  "rules": [
+    {
+      "action": "allow",
+      "page": "*"
+    }
+  ]
+}

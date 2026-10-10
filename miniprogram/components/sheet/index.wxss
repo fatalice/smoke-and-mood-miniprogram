@@ -1,0 +1,53 @@
+/* components/sheet/index.wxss */
+.sheet-mask {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 7, 11, 0.62);
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.28s;
+  z-index: 40;
+}
+.sheet-mask.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sheet {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: translateY(110%);
+  background: #141C28;
+  border-top: 1rpx solid var(--line);
+  border-radius: 52rpx 52rpx 0 0;
+  padding: 20rpx 40rpx calc(56rpx + env(safe-area-inset-bottom));
+  transition: transform 0.32s cubic-bezier(0.2, 0.8, 0.2, 1);
+  z-index: 50;
+}
+.sheet.open {
+  transform: translateY(0);
+}
+
+.grab {
+  width: 76rpx;
+  height: 8rpx;
+  border-radius: 4rpx;
+  background: #2A3648;
+  margin: 0 auto 32rpx;
+}
+
+.sheet-title {
+  font-size: 32rpx;
+  font-weight: 800;
+  margin-bottom: 10rpx;
+}
+
+.sheet-sub {
+  font-size: 24rpx;
+  color: var(--text3);
+  margin-bottom: 32rpx;
+  line-height: 1.6;
+}

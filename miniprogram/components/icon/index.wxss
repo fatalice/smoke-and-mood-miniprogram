@@ -1,0 +1,160 @@
+/* components/icon/index.wxss — 纯 CSS 图标（em 单位，随 font-size=size 缩放）*/
+.ic {
+  position: relative;
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  color: #9AA8BA;
+  vertical-align: middle;
+}
+
+/* ---- 设置（滑块）gear ---- */
+.ic-gear .line {
+  position: absolute;
+  left: 0.08em;
+  right: 0.08em;
+  height: 0.14em;
+  background: currentColor;
+  border-radius: 0.07em;
+}
+.ic-gear .line1 { top: 0.3em; }
+.ic-gear .line2 { top: 0.66em; }
+.ic-gear .knob {
+  position: absolute;
+  width: 0.26em;
+  height: 0.26em;
+  background: currentColor;
+  border-radius: 50%;
+}
+.ic-gear .k1 { top: 0.19em; left: 0.55em; }
+.ic-gear .k2 { top: 0.55em; left: 0.2em; }
+
+/* ---- 撤销 undo（左箭头）---- */
+.ic-undo .u-head {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0.32em 0 0.32em 0.42em;
+  border-color: transparent transparent transparent currentColor;
+  transform: translateY(-50%);
+}
+.ic-undo .u-line {
+  position: absolute;
+  top: 50%;
+  left: 0.38em;
+  right: 0;
+  height: 0.16em;
+  background: currentColor;
+  border-radius: 0.08em;
+  transform: translateY(-50%);
+}
+
+/* ---- 删除 trash ---- */
+.ic-trash .t-knob {
+  position: absolute;
+  top: 0.02em;
+  left: 50%;
+  width: 0.32em;
+  height: 0.14em;
+  background: currentColor;
+  border-radius: 0.07em;
+  transform: translateX(-50%);
+}
+.ic-trash .t-lid {
+  position: absolute;
+  top: 0.2em;
+  left: 0.12em;
+  right: 0.12em;
+  height: 0.14em;
+  background: currentColor;
+  border-radius: 0.07em;
+}
+.ic-trash .t-body {
+  position: absolute;
+  top: 0.34em;
+  bottom: 0.02em;
+  left: 0.22em;
+  right: 0.22em;
+  border: 0.12em solid currentColor;
+  border-top: none;
+  border-radius: 0 0 0.12em 0.12em;
+}
+.ic-trash .t-line {
+  position: absolute;
+  top: 0.5em;
+  width: 0.1em;
+  height: 0.28em;
+  background: currentColor;
+}
+.ic-trash .t-l1 { left: 38%; }
+.ic-trash .t-l2 { right: 38%; }
+
+/* ---- 关于 info（圆圈+i）---- */
+.ic-info { color: #9AA8BA; }
+.ic-info .ring {
+  position: absolute;
+  inset: 0.06em;
+  border: 0.12em solid currentColor;
+  border-radius: 50%;
+}
+.ic-info .i-dot {
+  position: absolute;
+  left: 50%;
+  top: 0.26em;
+  width: 0.14em;
+  height: 0.14em;
+  background: currentColor;
+  border-radius: 50%;
+  transform: translateX(-50%);
+}
+.ic-info .i-bar {
+  position: absolute;
+  left: 50%;
+  top: 0.46em;
+  width: 0.14em;
+  height: 0.34em;
+  background: currentColor;
+  border-radius: 0.07em;
+  transform: translateX(-50%);
+}
+
+/* ---- 心形 heart（CSS 伪元素，填充色随 on 变化）---- */
+.ic-heart {
+  width: 1em;
+  height: 0.9em;
+  color: #5F6E80;
+}
+.ic-heart.on { color: #FFB454; }
+.ic-heart::before,
+.ic-heart::after {
+  position: absolute;
+  content: "";
+  left: 0.5em;
+  top: 0;
+  width: 0.5em;
+  height: 0.8em;
+  background: currentColor;
+  border-radius: 0.5em 0.5em 0 0;
+}
+.ic-heart::before {
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+}
+.ic-heart::after {
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+
+/* ---- 点赞弹动 ---- */
+@keyframes heartPop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.35); }
+  100% { transform: scale(1); }
+}
+.ic.pop {
+  animation: heartPop 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}

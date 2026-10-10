@@ -1,0 +1,368 @@
+/* pages/smoke/index.wxss — 移植自 demo 的 viewSmoke 样式 */
+.app {
+  padding: 0 40rpx 40rpx;
+}
+
+/* ===== 顶栏 ===== */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12rpx 4rpx 40rpx;
+}
+.header-left {
+  display: flex;
+  flex-direction: column;
+}
+.date-main {
+  font-size: 38rpx;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+.date-sub {
+  font-size: 26rpx;
+  color: var(--text3);
+  margin-top: 6rpx;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+.streak {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--text2);
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  border-radius: 999rpx;
+  padding: 16rpx 26rpx;
+}
+.streak-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: var(--green);
+  box-shadow: 0 0 0 6rpx rgba(62, 207, 142, 0.15);
+}
+.icon-btn {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 26rpx;
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== Hero ===== */
+.hero {
+  position: relative;
+  background: linear-gradient(180deg, #1C2635 0%, #151D29 100%);
+  border: 1rpx solid var(--line);
+  border-radius: 48rpx;
+  padding: 40rpx 36rpx 36rpx;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -140rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 560rpx;
+  height: 320rpx;
+  background: radial-gradient(closest-side, rgba(255, 180, 84, 0.14), transparent 75%);
+  pointer-events: none;
+}
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+.hero-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: var(--text2);
+  letter-spacing: 0.06em;
+}
+.hero-tag {
+  font-size: 24rpx;
+  color: var(--amber);
+  background: var(--amber-soft);
+  border: 1rpx solid rgba(255, 180, 84, 0.25);
+  border-radius: 999rpx;
+  padding: 8rpx 20rpx;
+}
+.hero-tag:active {
+  opacity: 0.7;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+  margin-top: 32rpx;
+  position: relative;
+}
+.stat {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1rpx solid var(--line);
+  border-radius: 28rpx;
+  padding: 22rpx 8rpx 20rpx;
+  text-align: center;
+}
+.stat .b {
+  display: block;
+  font-size: 42rpx;
+  font-weight: 800;
+}
+.stat .s {
+  display: block;
+  font-size: 24rpx;
+  color: var(--text3);
+  margin-top: 4rpx;
+}
+.status-line {
+  margin-top: 28rpx;
+  padding: 22rpx 28rpx;
+  border-radius: 26rpx;
+  position: relative;
+  font-size: 27rpx;
+  text-align: center;
+  font-weight: 500;
+  transition: background 0.3s, border-color 0.3s, color 0.3s;
+}
+.status-line .b {
+  font-weight: 800;
+}
+.status-line.ok {
+  background: var(--green-soft);
+  border: 1rpx solid rgba(62, 207, 142, 0.22);
+  color: #9FE8C6;
+}
+.status-line.warn {
+  background: var(--amber-soft);
+  border: 1rpx solid rgba(255, 180, 84, 0.25);
+  color: #FFD9A8;
+}
+.status-line.over {
+  background: var(--red-soft);
+  border: 1rpx solid rgba(255, 107, 107, 0.25);
+  color: #FFB3B3;
+}
+.away {
+  display: block;
+  margin-top: 18rpx;
+  font-size: 24rpx;
+  color: var(--text3);
+  text-align: center;
+  position: relative;
+}
+
+/* ===== 操作区 ===== */
+.actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24rpx;
+  margin: 36rpx 0 52rpx;
+}
+.btn-main {
+  height: 108rpx;
+  border-radius: 34rpx;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #261204;
+  background: linear-gradient(180deg, #FFC471 0%, #F08C3A 100%);
+  box-shadow: 0 24rpx 52rpx -20rpx rgba(240, 140, 58, 0.6);
+  line-height: 108rpx;
+}
+.btn-main:active {
+  transform: scale(0.97);
+}
+.btn-ghost {
+  height: 108rpx;
+  border-radius: 34rpx;
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.btn-ghost:active {
+  transform: scale(0.97);
+}
+.undo-text {
+  color: var(--text2);
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+/* ===== 区块标题 ===== */
+.sec-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin: 0 4rpx 24rpx;
+}
+.sec-title .h2 {
+  font-size: 30rpx;
+  font-weight: 800;
+}
+.sec-title .hint {
+  font-size: 26rpx;
+  color: var(--text3);
+}
+
+/* ===== 趋势图 ===== */
+.chart-card {
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  border-radius: 40rpx;
+  padding: 32rpx 20rpx 16rpx;
+  margin-bottom: 52rpx;
+}
+
+/* ===== 今日记录 ===== */
+.timeline {
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  border-radius: 40rpx;
+  padding: 12rpx 32rpx;
+}
+.record {
+  display: flex;
+  align-items: center;
+  gap: 24rpx;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid var(--line);
+}
+.record:last-child {
+  border-bottom: none;
+}
+.rec-dot {
+  width: 18rpx;
+  height: 18rpx;
+  border-radius: 50%;
+  background: var(--amber);
+  flex: none;
+  box-shadow: 0 0 0 8rpx rgba(255, 180, 84, 0.12);
+}
+.rec-time {
+  font-size: 30rpx;
+  font-weight: 700;
+  min-width: 100rpx;
+}
+.rec-reason {
+  font-size: 26rpx;
+  color: var(--text2);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1rpx solid var(--line);
+  padding: 8rpx 22rpx;
+  border-radius: 999rpx;
+}
+.rec-del {
+  margin-left: auto;
+  width: 88rpx;
+  height: 88rpx;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 22rpx;
+}
+.rec-del.confirm {
+  color: #FFD9A8;
+  background: var(--amber-soft);
+  font-size: 24rpx;
+  font-weight: 700;
+  width: 152rpx;
+}
+.empty {
+  text-align: center;
+  color: var(--text3);
+  font-size: 26rpx;
+  line-height: 1.9;
+  padding: 68rpx 40rpx;
+}
+.empty text {
+  display: block;
+}
+
+/* ===== 弹层内容 ===== */
+.reason-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+  margin-bottom: 40rpx;
+}
+.reason {
+  height: 92rpx;
+  border-radius: 28rpx;
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  color: var(--text2);
+  font-size: 28rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.reason.sel {
+  background: var(--amber-soft);
+  border-color: rgba(255, 180, 84, 0.55);
+  color: var(--amber);
+  font-weight: 800;
+}
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48rpx;
+  margin: 12rpx 0 44rpx;
+}
+.step-btn {
+  width: 92rpx;
+  height: 92rpx;
+  border-radius: 30rpx;
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  font-size: 48rpx;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.step-btn.disabled {
+  opacity: 0.35;
+}
+.stepper-num {
+  font-size: 80rpx;
+  font-weight: 900;
+  min-width: 140rpx;
+  text-align: center;
+}
+.sheet-btn {
+  width: 100%;
+  height: 104rpx;
+  border-radius: 32rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #261204;
+  background: linear-gradient(180deg, #FFC471 0%, #F08C3A 100%);
+  box-shadow: 0 24rpx 52rpx -20rpx rgba(240, 140, 58, 0.55);
+  line-height: 104rpx;
+}
+.sheet-note {
+  display: block;
+  font-size: 24rpx;
+  color: var(--text3);
+  text-align: center;
+  margin-top: 24rpx;
+  line-height: 1.6;
+}

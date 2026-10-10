@@ -1,0 +1,9 @@
+{
+  "usingComponents": {
+    "ring": "/components/ring/index",
+    "bar-chart": "/components/bar-chart/index",
+    "sheet": "/components/sheet/index",
+    "icon": "/components/icon/index"
+  },
+  "navigationStyle": "custom"
+}

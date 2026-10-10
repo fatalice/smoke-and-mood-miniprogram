@@ -1,0 +1,118 @@
+<!--pages/tree/index.wxml-->
+<view class="app" style="padding-top:{{topPad}}px">
+
+  <!-- 顶栏 -->
+  <view class="app-header fade-in">
+    <view class="header-left">
+      <text class="date-main">{{dateMainT}}</text>
+      <text class="date-sub">树洞留言 · 匿名发布</text>
+    </view>
+    <view class="header-right">
+      <view class="pill"><view class="pill-dot"></view><text>匿名模式</text></view>
+      <view class="icon-btn" bindtap="openInfo"><icon type="info" size="36"/></view>
+    </view>
+  </view>
+
+  <!-- Hero -->
+  <view class="hero fade-in">
+    <view class="hero-top">
+      <text class="hero-title">树洞留言</text>
+      <text class="hero-tag">匿名发布</text>
+    </view>
+    <view class="bubble-wrap">
+      <view class="bubble">
+        <view class="bubble-body">
+          <view class="dot"></view>
+          <view class="dot"></view>
+          <view class="dot"></view>
+        </view>
+        <view class="bubble-tail"></view>
+      </view>
+      <text class="quote">说出口，心事就轻了一半</text>
+    </view>
+    <view class="stats">
+      <view class="stat"><text class="b">{{statToday}}</text><text class="s">今日留言</text></view>
+      <view class="stat"><text class="b">{{statLikes}}</text><text class="s">共鸣</text></view>
+      <view class="stat"><text class="b">{{statTotal}}</text><text class="s">累计留言</text></view>
+    </view>
+    <view class="status-line quiet">这里的一切，只有树洞知道</view>
+  </view>
+
+  <!-- 操作区 -->
+  <view class="actions solo fade-in">
+    <button class="btn-main btn-full" bindtap="openWrite">写一条留言</button>
+  </view>
+
+  <!-- 筛选 -->
+  <scroll-view scroll-x class="chips fade-in" enhanced show-scrollbar="{{false}}">
+    <view
+      wx:for="{{chips}}"
+      wx:key="label"
+      class="chip {{item.sel ? 'sel' : ''}}"
+      data-f="{{item.label}}"
+      bindtap="onFilter"
+    >
+      <view wx:if="{{item.color}}" class="chip-dot" style="background:{{item.color}}"></view>
+      <text>{{item.label}}</text>
+    </view>
+  </scroll-view>
+
+  <!-- 留言流 -->
+  <view class="feed fade-in">
+    <view wx:if="{{!feed.length}}" class="empty">
+      <text>这个分类还没有留言</text>
+      <text>点上方「写一条留言」，做第一个发声的人</text>
+    </view>
+    <view wx:for="{{feed}}" wx:key="id" class="msg">
+      <view class="msg-top">
+        <view class="msg-tag">
+          <view class="tag-dot" style="background:{{item.tagColor}}"></view>
+          <text>{{item.tag}}</text>
+        </view>
+        <text class="msg-time">{{item.time}}</text>
+      </view>
+      <text class="msg-text {{item.expanded ? 'open' : ''}}">{{item.text}}</text>
+      <view wx:if="{{item.canExpand}}" class="more" data-id="{{item.id}}" bindtap="toggleExpand">
+        <text>{{item.expanded ? '收起' : '展开'}}</text>
+      </view>
+      <view class="msg-foot">
+        <view class="like {{item.liked ? 'liked' : ''}}" data-id="{{item.id}}" bindtap="onLike">
+          <icon type="heart" on="{{item.liked}}" pop="{{popId === item.id}}" size="28"/>
+          <text>{{item.likes}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+</view>
+
+<!-- 写留言弹层 -->
+<sheet show="{{writeSheet}}" title="写一条留言" sub="匿名发布，不显示昵称与头像 · 留言保留 30 天" bind:close="closeSheets">
+  <textarea
+    class="write-area"
+    value="{{writeText}}"
+    maxlength="200"
+    placeholder="把说不出口的话写在这里…"
+    bindinput="onInput"
+  />
+  <view class="counter"><text>{{charCount}}</text>/200</view>
+  <view class="tag-grid">
+    <view wx:for="{{tags}}" wx:key="*this" class="tag {{selTag === item ? 'sel' : ''}}" data-t="{{item}}" bindtap="selTagFn">
+      <view class="tag-dot" style="background:{{tagColors[item]}}"></view>
+      <text>{{item}}</text>
+    </view>
+  </view>
+  <button class="sheet-btn {{publishDisabled ? 'disabled' : ''}}" disabled="{{publishDisabled}}" bindtap="publish">丢进树洞</button>
+  <text class="sheet-note">请友善留言 · 违规内容会被过滤</text>
+</sheet>
+
+<!-- 关于树洞弹层 -->
+<sheet show="{{infoSheet}}" title="关于树洞" sub="这里是一个可以说真话的地方" bind:close="closeSheets">
+  <view class="info-list">
+    <view class="info-item"><view class="info-dot"></view><text>完全匿名：不显示昵称、头像与位置，发布者自己也无法知道是谁</text></view>
+    <view class="info-item"><view class="info-dot"></view><text>留言保留 30 天，之后自动消失</text></view>
+    <view class="info-item"><view class="info-dot"></view><text>每条留言都可以被「共鸣」，这是对留言者最好的回应</text></view>
+    <view class="info-item"><view class="info-dot"></view><text>平台会过滤违规与恶意内容，请友善发声</text></view>
+  </view>
+  <button class="sheet-btn" bindtap="closeSheets">知道了</button>
+</sheet>

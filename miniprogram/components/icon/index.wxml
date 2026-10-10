@@ -1,0 +1,26 @@
+<!--components/icon/index.wxml-->
+<view class="ic ic-{{type}} {{on ? 'on' : ''}} {{pop ? 'pop' : ''}}" style="font-size:{{size}}rpx">
+  <block wx:if="{{type === 'gear'}}">
+    <view class="line line1"></view>
+    <view class="line line2"></view>
+    <view class="knob k1"></view>
+    <view class="knob k2"></view>
+  </block>
+  <block wx:elif="{{type === 'undo'}}">
+    <view class="u-head"></view>
+    <view class="u-line"></view>
+  </block>
+  <block wx:elif="{{type === 'trash'}}">
+    <view class="t-knob"></view>
+    <view class="t-lid"></view>
+    <view class="t-body"></view>
+    <view class="t-line t-l1"></view>
+    <view class="t-line t-l2"></view>
+  </block>
+  <block wx:elif="{{type === 'info'}}">
+    <view class="ring"></view>
+    <view class="i-dot"></view>
+    <view class="i-bar"></view>
+  </block>
+  <block wx:elif="{{type === 'heart'}}"></block>
+</view>

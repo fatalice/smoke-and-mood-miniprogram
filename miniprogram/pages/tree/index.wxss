@@ -1,0 +1,436 @@
+/* pages/tree/index.wxss — 移植自 demo 的 viewTree 样式 */
+.app {
+  padding: 0 40rpx 40rpx;
+}
+
+/* ===== 顶栏 ===== */
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12rpx 4rpx 40rpx;
+}
+.header-left {
+  display: flex;
+  flex-direction: column;
+}
+.date-main {
+  font-size: 38rpx;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+}
+.date-sub {
+  font-size: 26rpx;
+  color: var(--text3);
+  margin-top: 6rpx;
+}
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 20rpx;
+}
+.pill {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 26rpx;
+  font-weight: 600;
+  color: var(--text2);
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  border-radius: 999rpx;
+  padding: 16rpx 26rpx;
+}
+.pill-dot {
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 0 6rpx rgba(255, 180, 84, 0.16);
+}
+.icon-btn {
+  width: 88rpx;
+  height: 88rpx;
+  border-radius: 26rpx;
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ===== Hero ===== */
+.hero {
+  position: relative;
+  background: linear-gradient(180deg, #1C2635 0%, #151D29 100%);
+  border: 1rpx solid var(--line);
+  border-radius: 48rpx;
+  padding: 40rpx 36rpx 36rpx;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  top: -140rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 560rpx;
+  height: 320rpx;
+  background: radial-gradient(closest-side, rgba(255, 180, 84, 0.14), transparent 75%);
+  pointer-events: none;
+}
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+.hero-title {
+  font-size: 26rpx;
+  font-weight: 700;
+  color: var(--text2);
+  letter-spacing: 0.06em;
+}
+.hero-tag {
+  font-size: 24rpx;
+  color: var(--amber);
+  background: var(--amber-soft);
+  border: 1rpx solid rgba(255, 180, 84, 0.25);
+  border-radius: 999rpx;
+  padding: 8rpx 20rpx;
+}
+
+/* 气泡（纯 CSS） */
+.bubble-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 28rpx 0 8rpx;
+  position: relative;
+}
+.bubble {
+  position: relative;
+  width: 220rpx;
+  height: 184rpx;
+  filter: drop-shadow(0 24rpx 52rpx rgba(240, 140, 58, 0.28));
+  animation: breathe 4.2s ease-in-out infinite;
+}
+.bubble-body {
+  width: 220rpx;
+  height: 160rpx;
+  border-radius: 80rpx;
+  background: linear-gradient(135deg, #FFC471, #F08C3A);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 22rpx;
+}
+.bubble-body .dot {
+  width: 20rpx;
+  height: 20rpx;
+  border-radius: 50%;
+  background: #261204;
+}
+.bubble-tail {
+  position: absolute;
+  left: 44rpx;
+  bottom: 0;
+  width: 0;
+  height: 0;
+  border-left: 16rpx solid transparent;
+  border-right: 16rpx solid transparent;
+  border-top: 28rpx solid #F08C3A;
+}
+.quote {
+  font-size: 28rpx;
+  color: var(--text2);
+  text-align: center;
+  margin-top: 12rpx;
+}
+@keyframes breathe {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.035); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bubble { animation: none; }
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20rpx;
+  margin-top: 32rpx;
+  position: relative;
+}
+.stat {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1rpx solid var(--line);
+  border-radius: 28rpx;
+  padding: 22rpx 8rpx 20rpx;
+  text-align: center;
+}
+.stat .b {
+  display: block;
+  font-size: 42rpx;
+  font-weight: 800;
+}
+.stat .s {
+  display: block;
+  font-size: 24rpx;
+  color: var(--text3);
+  margin-top: 4rpx;
+}
+.status-line.quiet {
+  margin-top: 28rpx;
+  padding: 22rpx 28rpx;
+  border-radius: 26rpx;
+  font-size: 27rpx;
+  text-align: center;
+  font-weight: 500;
+  background: var(--amber-soft);
+  border: 1rpx solid rgba(255, 180, 84, 0.22);
+  color: #FFD9A8;
+}
+
+/* ===== 操作区 ===== */
+.actions {
+  margin: 36rpx 0 44rpx;
+}
+.btn-main {
+  height: 108rpx;
+  border-radius: 34rpx;
+  font-size: 34rpx;
+  font-weight: 800;
+  color: #261204;
+  background: linear-gradient(180deg, #FFC471 0%, #F08C3A 100%);
+  box-shadow: 0 24rpx 52rpx -20rpx rgba(240, 140, 58, 0.6);
+  line-height: 108rpx;
+}
+.btn-main:active {
+  transform: scale(0.97);
+}
+.btn-full {
+  width: 100%;
+}
+
+/* ===== 筛选条 ===== */
+.chips {
+  white-space: nowrap;
+  margin-bottom: 28rpx;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 14rpx;
+  height: 88rpx;
+  padding: 0 32rpx;
+  margin-right: 16rpx;
+  border-radius: 999rpx;
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  color: var(--text2);
+  font-size: 26rpx;
+  font-weight: 600;
+}
+.chip-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+}
+.chip.sel {
+  background: var(--amber-soft);
+  border-color: rgba(255, 180, 84, 0.55);
+  color: var(--amber);
+  font-weight: 800;
+}
+
+/* ===== 留言流 ===== */
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+.msg {
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  border-radius: 36rpx;
+  padding: 28rpx 32rpx 20rpx;
+}
+.msg-top {
+  display: flex;
+  align-items: center;
+  gap: 18rpx;
+}
+.msg-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 12rpx;
+  font-size: 24rpx;
+  font-weight: 700;
+  padding: 8rpx 20rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1rpx solid var(--line);
+  color: var(--text2);
+}
+.tag-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+}
+.msg-time {
+  margin-left: auto;
+  font-size: 24rpx;
+  color: var(--text3);
+}
+.msg-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+  font-size: 28rpx;
+  line-height: 1.75;
+  color: var(--text);
+  margin-top: 20rpx;
+  word-break: break-word;
+}
+.msg-text.open {
+  -webkit-line-clamp: unset;
+  display: block;
+}
+.more {
+  font-size: 24rpx;
+  color: var(--amber);
+  padding: 12rpx 0 4rpx;
+  font-weight: 600;
+}
+.msg-foot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12rpx;
+}
+.like {
+  display: inline-flex;
+  align-items: center;
+  gap: 14rpx;
+  height: 88rpx;
+  padding: 0 26rpx;
+  border-radius: 999rpx;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1rpx solid var(--line);
+  color: var(--text3);
+  font-size: 26rpx;
+  font-weight: 600;
+}
+.like.liked {
+  color: var(--amber);
+  background: var(--amber-soft);
+  border-color: rgba(255, 180, 84, 0.4);
+}
+.empty {
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  border-radius: 36rpx;
+  padding: 68rpx 40rpx;
+  text-align: center;
+  color: var(--text3);
+  font-size: 26rpx;
+  line-height: 1.9;
+}
+.empty text {
+  display: block;
+}
+
+/* ===== 写留言 ===== */
+.write-area {
+  width: 100%;
+  height: 264rpx;
+  border-radius: 28rpx;
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  color: var(--text);
+  font-size: 32rpx;
+  line-height: 1.65;
+  padding: 24rpx 28rpx;
+}
+.counter {
+  text-align: right;
+  font-size: 24rpx;
+  color: var(--text3);
+  margin: 14rpx 4rpx 28rpx;
+}
+.tag-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16rpx;
+  margin-bottom: 40rpx;
+}
+.tag {
+  height: 92rpx;
+  border-radius: 28rpx;
+  background: var(--card);
+  border: 1rpx solid var(--line);
+  color: var(--text2);
+  font-size: 26rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12rpx;
+}
+.tag-dot {
+  width: 12rpx;
+  height: 12rpx;
+  border-radius: 50%;
+}
+.tag.sel {
+  background: var(--amber-soft);
+  border-color: rgba(255, 180, 84, 0.55);
+  color: var(--amber);
+  font-weight: 800;
+}
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 26rpx;
+  margin: 4rpx 0 40rpx;
+}
+.info-item {
+  display: flex;
+  gap: 22rpx;
+  font-size: 27rpx;
+  color: var(--text2);
+  line-height: 1.7;
+}
+.info-dot {
+  flex: none;
+  width: 14rpx;
+  height: 14rpx;
+  border-radius: 50%;
+  background: var(--amber);
+  box-shadow: 0 0 0 6rpx rgba(255, 180, 84, 0.14);
+  margin-top: 16rpx;
+}
+.sheet-btn {
+  width: 100%;
+  height: 104rpx;
+  border-radius: 32rpx;
+  font-size: 32rpx;
+  font-weight: 800;
+  color: #261204;
+  background: linear-gradient(180deg, #FFC471 0%, #F08C3A 100%);
+  box-shadow: 0 24rpx 52rpx -20rpx rgba(240, 140, 58, 0.55);
+  line-height: 104rpx;
+}
+.sheet-btn.disabled {
+  opacity: 0.38;
+  box-shadow: none;
+}
+.sheet-note {
+  display: block;
+  font-size: 24rpx;
+  color: var(--text3);
+  text-align: center;
+  margin-top: 24rpx;
+  line-height: 1.6;
+}

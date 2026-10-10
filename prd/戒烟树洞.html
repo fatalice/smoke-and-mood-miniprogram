@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>戒烟树洞 · 双功能单页 Demo</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2310161F'/%3E%3Ccircle cx='22' cy='32' r='8' fill='none' stroke='%23FFB454' stroke-width='4'/%3E%3Cpath d='M38 20l6 8-6 8h10' fill='none' stroke='%23F08C3A' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://miaoda.feishu.cn">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@400;500;700;900&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<style>
+:root{
+  --bg:#0B0F16;
+  --phone:#10161F;
+  --card:#161E2A;
+  --line:rgba(148,163,184,.14);
+  --text:#EAF0F7;
+  --text2:#9AA8BA;
+  --text3:#5F6E80;
+  --amber:#FFB454;
+  --amber-deep:#F08C3A;
+  --amber-soft:rgba(255,180,84,.12);
+  --green:#3ECF8E;
+  --green-soft:rgba(62,207,142,.10);
+  --red:#FF6B6B;
+  --red-soft:rgba(255,107,107,.10);
+  --blue:#7FB4FF;
+  --ring-track:#223045;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Noto Sans SC',system-ui,-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
+  -webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(58% 42% at 50% 6%, rgba(240,140,58,.10), transparent 72%);
+}
+button{font-family:inherit;border:none;background:none;color:inherit;cursor:pointer}
+textarea{font-family:inherit}
+.stage{min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:0 0 40px}
+.demo-caption{display:none}
+.phone{position:relative;width:100%;max-width:430px;background:var(--phone);min-height:100vh}
+.app{padding:20px 20px 36px}
+
+/* ===== 顶栏 ===== */
+.app-header{display:flex;align-items:center;justify-content:space-between;padding:6px 2px 20px}
+.date-main{font-size:19px;font-weight:900;letter-spacing:-.01em}
+.date-sub{font-size:13px;color:var(--text3);margin-top:3px}
+.header-right{display:flex;align-items:center;gap:10px}
+.streak,.pill{
+  display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--text2);
+  background:var(--card);border:1px solid var(--line);border-radius:999px;padding:8px 13px;
+}
+.streak i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(62,207,142,.15)}
+.pill i{width:7px;height:7px;border-radius:50%;background:var(--amber);box-shadow:0 0 0 3px rgba(255,180,84,.16)}
+.icon-btn{
+  width:44px;height:44px;border-radius:13px;background:var(--card);
+  border:1px solid var(--line);display:flex;align-items:center;justify-content:center;
+  color:var(--text2);transition:color .2s, border-color .2s;
+}
+.icon-btn:hover{color:var(--text);border-color:rgba(148,163,184,.3)}
+.icon-btn svg{width:19px;height:19px}
+
+/* ===== Hero ===== */
+.hero{
+  position:relative;background:linear-gradient(180deg,#1C2635 0%,#151D29 100%);
+  border:1px solid var(--line);border-radius:24px;padding:20px 18px 18px;overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;top:-70px;left:50%;transform:translateX(-50%);
+  width:280px;height:160px;pointer-events:none;
+  background:radial-gradient(closest-side, rgba(255,180,84,.14), transparent 75%);
+}
+.hero-top{display:flex;align-items:center;justify-content:space-between;position:relative}
+.hero-title{font-size:13px;font-weight:700;color:var(--text2);letter-spacing:.06em}
+.hero-tag{
+  font-size:12px;color:var(--amber);background:var(--amber-soft);
+  border:1px solid rgba(255,180,84,.25);border-radius:999px;padding:4px 10px;
+}
+.ring-wrap{display:flex;flex-direction:column;align-items:center;margin:14px 0 2px;position:relative}
+.ring{position:relative;width:172px;height:172px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring-bar{
+  transition:stroke-dashoffset .7s cubic-bezier(.2,.8,.2,1), stroke .4s;
+  filter:drop-shadow(0 0 7px rgba(255,180,84,.45));
+}
+.ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring-num{font-size:46px;font-weight:900;line-height:1;letter-spacing:-.02em;transition:color .3s}
+.ring-label{font-size:13px;color:var(--text3);margin-top:7px}
+.bubble-wrap{display:flex;flex-direction:column;align-items:center;margin:14px 0 4px;position:relative}
+.bubble{
+  width:110px;height:92px;filter:drop-shadow(0 12px 26px rgba(240,140,58,.28));
+  animation:breathe 4.2s ease-in-out infinite;
+}
+.bubble svg{width:100%;height:100%}
+.quote{font-size:14px;color:var(--text2);text-align:center;position:relative;margin-top:6px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px;position:relative}
+.stat{
+  background:rgba(255,255,255,.03);border:1px solid var(--line);border-radius:14px;
+  padding:11px 4px 10px;text-align:center;
+}
+.stat b{display:block;font-size:21px;font-weight:800}
+.stat span{display:block;font-size:12px;color:var(--text3);margin-top:2px}
+.status-line{
+  margin-top:14px;padding:11px 14px;border-radius:13px;position:relative;
+  font-size:13.5px;text-align:center;font-weight:500;
+  transition:background .3s, border-color .3s, color .3s;
+}
+.status-line.ok{background:var(--green-soft);border:1px solid rgba(62,207,142,.22);color:#9FE8C6}
+.status-line.warn{background:var(--amber-soft);border:1px solid rgba(255,180,84,.25);color:#FFD9A8}
+.status-line.over{background:var(--red-soft);border:1px solid rgba(255,107,107,.25);color:#FFB3B3}
+.status-line.quiet{background:var(--amber-soft);border:1px solid rgba(255,180,84,.22);color:#FFD9A8}
+.status-line b{font-weight:800}
+.away{margin-top:9px;font-size:12px;color:var(--text3);text-align:center;position:relative}
+
+/* ===== 操作区 ===== */
+.actions{display:grid;grid-template-columns:1fr 56px;gap:12px;margin:18px 0 26px}
+.actions.solo{display:block;margin:18px 0 22px}
+.btn-main{
+  height:54px;border-radius:17px;font-size:17px;font-weight:800;color:#261204;
+  background:linear-gradient(180deg,#FFC471 0%,#F08C3A 100%);
+  box-shadow:0 12px 26px -10px rgba(240,140,58,.6);
+  transition:transform .15s, filter .2s, opacity .2s;
+}
+.btn-main:active{transform:scale(.97)}
+.btn-main:hover{filter:brightness(1.04)}
+.btn-main:disabled{filter:grayscale(.9) brightness(.75);box-shadow:none;cursor:not-allowed}
+.btn-main.btn-full{width:100%}
+.btn-ghost{
+  height:54px;border-radius:17px;background:var(--card);border:1px solid var(--line);
+  color:var(--text2);display:flex;align-items:center;justify-content:center;
+  transition:color .2s,border-color .2s;
+}
+.btn-ghost:hover{color:var(--text);border-color:rgba(148,163,184,.32)}
+.btn-ghost svg{width:20px;height:20px}
+
+/* ===== 区块标题 ===== */
+.sec-title{display:flex;align-items:baseline;justify-content:space-between;margin:0 2px 12px}
+.sec-title h2{font-size:15px;font-weight:800}
+.sec-title .hint{font-size:13px;color:var(--text3)}
+
+/* ===== 趋势图 ===== */
+.chart-card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:16px 10px 8px;margin-bottom:26px}
+#trendChart{width:100%;height:150px}
+
+/* ===== 今日记录 ===== */
+.timeline{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:6px 16px}
+.record{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--line)}
+.record:last-child{border-bottom:none}
+.rec-dot{width:9px;height:9px;border-radius:50%;background:var(--amber);flex:none;box-shadow:0 0 0 4px rgba(255,180,84,.12)}
+.rec-time{font-size:15px;font-weight:700;min-width:50px}
+.rec-reason{
+  font-size:13px;color:var(--text2);background:rgba(255,255,255,.05);
+  border:1px solid var(--line);padding:4px 11px;border-radius:999px;
+}
+.rec-del{
+  margin-left:auto;color:var(--text3);width:44px;height:44px;flex:none;
+  display:flex;align-items:center;justify-content:center;border-radius:11px;
+  transition:color .2s, background .2s;
+}
+.rec-del:hover{color:var(--red);background:var(--red-soft)}
+.rec-del.confirm{color:#FFD9A8;background:var(--amber-soft);font-size:12px;font-weight:700;min-width:76px;padding:0 10px}
+.rec-del svg{width:17px;height:17px}
+
+/* ===== 筛选与留言流 ===== */
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;margin-bottom:14px;scrollbar-width:none}
+.chips::-webkit-scrollbar{display:none}
+.chip{
+  flex:none;height:44px;padding:0 16px;border-radius:999px;
+  background:var(--card);border:1px solid var(--line);color:var(--text2);
+  font-size:13px;font-weight:600;display:flex;align-items:center;gap:7px;
+  transition:all .18s;
+}
+.chip i{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:0;transition:opacity .18s}
+.chip:hover{border-color:rgba(148,163,184,.35);color:var(--text)}
+.chip.sel{background:var(--amber-soft);border-color:rgba(255,180,84,.55);color:var(--amber);font-weight:800}
+.chip.sel i{opacity:1}
+.feed{display:flex;flex-direction:column;gap:10px}
+.msg{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:14px 16px 10px}
+.msg-top{display:flex;align-items:center;gap:9px}
+.msg-tag{
+  display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;
+  padding:4px 10px;border-radius:999px;background:rgba(255,255,255,.04);
+  border:1px solid var(--line);color:var(--text2);
+}
+.msg-tag i{width:6px;height:6px;border-radius:50%}
+.msg-time{margin-left:auto;font-size:12px;color:var(--text3)}
+.msg-text{
+  font-size:14px;line-height:1.75;color:var(--text);margin-top:10px;word-break:break-word;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+}
+.msg-text.open{-webkit-line-clamp:unset;display:block}
+.more{font-size:12px;color:var(--amber);padding:6px 0 2px;font-weight:600}
+.msg-foot{display:flex;justify-content:flex-end;margin-top:6px}
+.like{
+  display:inline-flex;align-items:center;gap:7px;height:44px;padding:0 13px;
+  border-radius:999px;background:rgba(255,255,255,.03);border:1px solid var(--line);
+  color:var(--text3);font-size:13px;font-weight:600;transition:all .18s;
+}
+.like svg{width:16px;height:16px}
+.like:hover{color:var(--text2);border-color:rgba(148,163,184,.3)}
+.like.liked{color:var(--amber);background:var(--amber-soft);border-color:rgba(255,180,84,.4)}
+@keyframes heartPop{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
+.like.pop svg{animation:heartPop .4s cubic-bezier(.2,.8,.2,1)}
+.empty{
+  background:var(--card);border:1px solid var(--line);border-radius:18px;
+  padding:34px 20px;text-align:center;color:var(--text3);font-size:13px;line-height:1.9;
+}
+
+/* ===== 写留言 ===== */
+.reason-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px}
+.reason{
+  height:46px;border-radius:14px;background:var(--card);border:1px solid var(--line);
+  color:var(--text2);font-size:14px;font-weight:600;
+  transition:all .18s;
+}
+.reason:hover{border-color:rgba(148,163,184,.35);color:var(--text)}
+.reason.sel{background:var(--amber-soft);border-color:rgba(255,180,84,.55);color:var(--amber);font-weight:800}
+.stepper{display:flex;align-items:center;justify-content:center;gap:24px;margin:6px 0 22px}
+.step-btn{
+  width:46px;height:46px;border-radius:15px;background:var(--card);
+  border:1px solid var(--line);font-size:24px;font-weight:600;color:var(--text);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;
+}
+.step-btn:hover{border-color:rgba(255,180,84,.5);color:var(--amber)}
+.step-btn:disabled{opacity:.35;pointer-events:none}
+.stepper-num{font-size:40px;font-weight:900;min-width:70px;text-align:center}
+.write-area{
+  width:100%;height:132px;border-radius:14px;background:var(--card);
+  border:1px solid var(--line);color:var(--text);font-size:16px;line-height:1.65;
+  padding:12px 14px;resize:none;outline:none;transition:border-color .2s;
+}
+.write-area::placeholder{color:#46536A}
+.write-area:focus{border-color:rgba(255,180,84,.45)}
+.counter{text-align:right;font-size:12px;color:var(--text3);margin:7px 2px 14px}
+.tag-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:20px}
+.tag{
+  height:46px;border-radius:14px;background:var(--card);border:1px solid var(--line);
+  color:var(--text2);font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:all .18s;
+}
+.tag i{width:6px;height:6px;border-radius:50%;opacity:0;transition:opacity .18s}
+.tag:hover{border-color:rgba(148,163,184,.35);color:var(--text)}
+.tag.sel{background:var(--amber-soft);border-color:rgba(255,180,84,.55);color:var(--amber);font-weight:800}
+.tag.sel i{opacity:1}
+.info-list{display:flex;flex-direction:column;gap:13px;margin:2px 0 20px}
+.info-item{display:flex;gap:11px;font-size:13.5px;color:var(--text2);line-height:1.7}
+.info-item i{
+  flex:none;width:7px;height:7px;border-radius:50%;background:var(--amber);
+  box-shadow:0 0 0 3px rgba(255,180,84,.14);margin-top:8px;
+}
+
+/* ===== 底部弹层 ===== */
+.sheet-mask{
+  position:fixed;inset:0;background:rgba(4,7,11,.62);backdrop-filter:blur(5px);
+  opacity:0;pointer-events:none;transition:opacity .28s;z-index:40;
+}
+.sheet-mask.open{opacity:1;pointer-events:auto}
+.sheet{
+  position:fixed;left:50%;bottom:0;transform:translateX(-50%) translateY(105%);
+  width:100%;max-width:430px;background:#141C28;border:1px solid var(--line);border-bottom:none;
+  border-radius:26px 26px 0 0;padding:10px 20px calc(28px + env(safe-area-inset-bottom));
+  transition:transform .32s cubic-bezier(.2,.8,.2,1);z-index:50;
+}
+.sheet.open{transform:translateX(-50%) translateY(0)}
+.grab{width:38px;height:4px;border-radius:2px;background:#2A3648;margin:0 auto 16px}
+.sheet h3{font-size:16px;font-weight:800;margin-bottom:5px}
+.sheet .sub{font-size:12px;color:var(--text3);margin-bottom:16px;line-height:1.6}
+.sheet-btn{
+  width:100%;height:52px;border-radius:16px;font-size:16px;font-weight:800;color:#261204;
+  background:linear-gradient(180deg,#FFC471 0%,#F08C3A 100%);
+  box-shadow:0 12px 26px -10px rgba(240,140,58,.55);
+  transition:transform .15s, filter .2s, opacity .2s;
+}
+.sheet-btn:active{transform:scale(.98)}
+.sheet-btn:hover{filter:brightness(1.04)}
+.sheet-btn:disabled{opacity:.38;box-shadow:none;cursor:not-allowed}
+.sheet-note{font-size:12px;color:var(--text3);text-align:center;margin-top:12px;line-height:1.6}
+
+/* ===== Toast ===== */
+.toast{
+  position:fixed;top:16px;left:50%;transform:translateX(-50%) translateY(-10px);
+  background:#1E2937;border:1px solid rgba(148,163,184,.22);border-radius:999px;
+  padding:10px 18px;font-size:13px;color:var(--text);opacity:0;pointer-events:none;
+  transition:opacity .28s, transform .28s;z-index:99;white-space:nowrap;
+  box-shadow:0 12px 30px -8px rgba(0,0,0,.6);
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ===== Tab 栏 ===== */
+.tabbar{
+  position:sticky;bottom:0;z-index:35;
+  display:flex;background:rgba(15,21,30,.94);backdrop-filter:blur(12px);
+  border-top:1px solid var(--line);
+  padding:6px 14px calc(8px + env(safe-area-inset-bottom));
+}
+.tab{
+  flex:1;height:54px;border-radius:14px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:3px;
+  color:var(--text3);font-size:11px;font-weight:600;
+  transition:color .2s, background .2s;
+}
+.tab svg{width:22px;height:22px}
+.tab:hover{color:var(--text2)}
+.tab.sel{color:var(--amber);background:var(--amber-soft)}
+
+/* ===== 动效 ===== */
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.035)}}
+@keyframes pop{0%{transform:scale(1)}40%{transform:scale(1.16)}100%{transform:scale(1)}}
+.pop{animation:pop .45s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:rise .5s ease both}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+
+/* ===== 桌面端手机画幅 ===== */
+@media (min-width:521px){
+  .stage{padding:44px 0 64px}
+  .demo-caption{
+    display:block;font-size:12px;color:var(--text3);letter-spacing:.14em;margin-bottom:22px;
+  }
+  .phone{
+    min-height:0;border-radius:42px;border:1px solid var(--line);
+    box-shadow:0 0 0 9px rgba(255,255,255,.02), 0 50px 100px -34px rgba(0,0,0,.8);
+  }
+  .tabbar{border-radius:0 0 42px 42px}
+}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="demo-caption">戒烟记录 · 树洞留言 双功能单页 Demo（手机画幅预览）</div>
+  <div class="phone">
+    <div class="view" id="viewSmoke">
+      <div class="app">
+        <!-- ===== 顶栏 ===== -->
+        <header class="app-header fade-in">
+          <div>
+            <div class="date-main" id="dateMain">10月10日 周六</div>
+            <div class="date-sub" id="dateSub">今天已坚持 · 比昨天少 2 根</div>
+          </div>
+          <div class="header-right">
+            <span class="streak"><i></i><span id="streakText">连续 3 天</span></span>
+            <button class="icon-btn" id="openLimit" aria-label="设置今日额度">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- ===== Hero 今日额度 ===== -->
+        <section class="hero fade-in" style="animation-delay:.06s">
+          <div class="hero-top">
+            <div class="hero-title">今日吸烟额度</div>
+            <div class="hero-tag" id="heroTag">剩余额度</div>
+          </div>
+          <div class="ring-wrap">
+            <div class="ring" id="ring">
+              <svg viewBox="0 0 172 172">
+                <defs>
+                  <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#FFC471"/>
+                    <stop offset="1" stop-color="#F08C3A"/>
+                  </linearGradient>
+                </defs>
+                <circle cx="86" cy="86" r="74" fill="none" stroke="#223045" stroke-width="13"/>
+                <circle id="ringBar" class="ring-bar" cx="86" cy="86" r="74" fill="none"
+                  stroke="url(#ringGrad)" stroke-width="13" stroke-linecap="round"
+                  stroke-dasharray="464.9" stroke-dashoffset="464.9"/>
+              </svg>
+              <div class="ring-center">
+                <div class="ring-num" id="ringNum">6</div>
+                <div class="ring-label" id="ringLabel">剩余额度 · 根</div>
+              </div>
+            </div>
+          </div>
+          <div class="stats">
+            <div class="stat"><b id="statTotal">10</b><span>今日总量</span></div>
+            <div class="stat"><b id="statSmoked">4</b><span>已抽</span></div>
+            <div class="stat"><b id="statLeft">6</b><span>剩余</span></div>
+          </div>
+          <div class="status-line ok" id="statusLine">今日还剩 <b>6</b> 根，悠着点</div>
+          <div class="away" id="awayText">距上次吸烟 1 小时 12 分钟</div>
+        </section>
+
+        <!-- ===== 操作区 ===== -->
+        <div class="actions fade-in" style="animation-delay:.12s">
+          <button class="btn-main" id="logBtn">记录一支</button>
+          <button class="btn-ghost" id="undoBtn" aria-label="撤销上一支">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+          </button>
+        </div>
+
+        <!-- ===== 最近 7 天 ===== -->
+        <section class="chart-card fade-in" style="animation-delay:.18s">
+          <div class="sec-title">
+            <h2>最近 7 天</h2>
+            <span class="hint" id="chartHint">日均 7.9 根</span>
+          </div>
+          <div id="trendChart"></div>
+        </section>
+
+        <!-- ===== 今日记录 ===== -->
+        <section class="fade-in" style="animation-delay:.24s">
+          <div class="sec-title">
+            <h2>今日记录</h2>
+            <span class="hint" id="recCount">4 条</span>
+          </div>
+          <div class="timeline" id="timeline"></div>
+        </section>
+      </div>
+
+      <!-- 记录弹层 -->
+      <div class="sheet" id="reasonSheet">
+        <div class="grab"></div>
+        <h3>记下这一支</h3>
+        <p class="sub">选一个诱因，方便之后看清什么时刻最容易想抽烟</p>
+        <div class="reason-grid" id="reasonGrid"></div>
+        <button class="sheet-btn" id="confirmLog">记录这一支</button>
+        <p class="sheet-note">记录会立即计入今日已抽数量</p>
+      </div>
+
+      <!-- 限额弹层 -->
+      <div class="sheet" id="limitSheet">
+        <div class="grab"></div>
+        <h3>今日吸烟额度</h3>
+        <p class="sub">设定每日上限，超限时页面会提醒你收手</p>
+        <div class="stepper">
+          <button class="step-btn" id="stepMinus" aria-label="减少">−</button>
+          <div class="stepper-num" id="limitNum">10</div>
+          <button class="step-btn" id="stepPlus" aria-label="增加">+</button>
+        </div>
+        <button class="sheet-btn" id="saveLimit">保存额度</button>
+        <p class="sheet-note">根/天 · 可随时调整，建议从当前日均开始逐步下调</p>
+      </div>
+    </div>
+    <div class="view" id="viewTree" hidden>
+      <div class="app">
+        <!-- ===== 顶栏 ===== -->
+        <header class="app-header fade-in">
+          <div>
+            <div class="date-main" id="dateMainT">10月10日 周六</div>
+            <div class="date-sub">树洞留言 · 匿名发布</div>
+          </div>
+          <div class="header-right">
+            <span class="pill"><i></i><span>匿名模式</span></span>
+            <button class="icon-btn" id="openInfo" aria-label="关于树洞">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- ===== Hero ===== -->
+        <section class="hero fade-in" style="animation-delay:.06s">
+          <div class="hero-top">
+            <div class="hero-title">树洞留言</div>
+            <div class="hero-tag">匿名发布</div>
+          </div>
+          <div class="bubble-wrap">
+            <div class="bubble">
+              <svg viewBox="0 0 110 92">
+                <defs>
+                  <linearGradient id="bubGrad" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0" stop-color="#FFC471"/>
+                    <stop offset="1" stop-color="#F08C3A"/>
+                  </linearGradient>
+                </defs>
+                <path d="M55 7C27 7 8 25 8 47c0 13 8 24 20 32l-4 12 17-7c4 1 9 2 14 2 28 0 47-19 47-39S83 7 55 7z" fill="url(#bubGrad)" opacity=".92"/>
+                <circle cx="37" cy="47" r="5" fill="#261204"/>
+                <circle cx="55" cy="47" r="5" fill="#261204"/>
+                <circle cx="73" cy="47" r="5" fill="#261204"/>
+              </svg>
+            </div>
+            <div class="quote">说出口，心事就轻了一半</div>
+          </div>
+          <div class="stats">
+            <div class="stat"><b id="statToday">4</b><span>今日留言</span></div>
+            <div class="stat"><b id="statLikes">94</b><span>共鸣</span></div>
+            <div class="stat"><b id="statTotal">8</b><span>累计留言</span></div>
+          </div>
+          <div class="status-line quiet">这里的一切，只有树洞知道</div>
+        </section>
+
+        <!-- ===== 操作区 ===== -->
+        <div class="actions solo fade-in" style="animation-delay:.12s">
+          <button class="btn-main btn-full" id="writeBtn">写一条留言</button>
+        </div>
+
+        <!-- ===== 筛选 ===== -->
+        <div class="chips fade-in" style="animation-delay:.16s" id="chips"></div>
+
+        <!-- ===== 留言流 ===== -->
+        <section class="fade-in" style="animation-delay:.2s">
+          <div class="feed" id="feed"></div>
+        </section>
+      </div>
+
+      <!-- 写留言弹层 -->
+      <div class="sheet" id="writeSheet">
+        <div class="grab"></div>
+        <h3>写一条留言</h3>
+        <p class="sub">匿名发布，不显示昵称与头像 · 留言保留 30 天</p>
+        <textarea class="write-area" id="writeArea" maxlength="200" placeholder="把说不出口的话写在这里…"></textarea>
+        <div class="counter"><span id="charCount">0</span>/200</div>
+        <div class="tag-grid" id="tagGrid"></div>
+        <button class="sheet-btn" id="publishBtn" disabled>丢进树洞</button>
+        <p class="sheet-note">请友善留言 · 违规内容会被过滤</p>
+      </div>
+
+      <!-- 匿名说明弹层 -->
+      <div class="sheet" id="infoSheet">
+        <div class="grab"></div>
+        <h3>关于树洞</h3>
+        <p class="sub">这里是一个可以说真话的地方</p>
+        <div class="info-list">
+          <div class="info-item"><i></i>完全匿名：不显示昵称、头像与位置，发布者自己也无法知道是谁</div>
+          <div class="info-item"><i></i>留言保留 30 天，之后自动消失</div>
+          <div class="info-item"><i></i>每条留言都可以被「共鸣」，这是对留言者最好的回应</div>
+          <div class="info-item"><i></i>平台会过滤违规与恶意内容，请友善发声</div>
+        </div>
+        <button class="sheet-btn" id="closeInfo">知道了</button>
+      </div>
+    </div>
+
+    <!-- ===== 底部 Tab 栏 ===== -->
+    <nav class="tabbar" id="tabbar">
+      <button class="tab sel" data-view="smoke" aria-label="记录戒烟">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 15h10a2 2 0 0 0 2-2v-1a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2z"/><path d="M17 13h1.6a1.4 1.4 0 0 0 0-2.8H17"/><path d="M4 18c-.7-1.1.7-2.1 0-3.2"/></svg>
+        <span>记录戒烟</span>
+      </button>
+      <button class="tab" data-view="tree" aria-label="树洞留言">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/><line x1="9" y1="9" x2="15" y2="9"/><line x1="9" y1="13" x2="13" y2="13"/></svg>
+        <span>树洞留言</span>
+      </button>
+    </nav>
+  </div>
+</div>
+
+<!-- 共享遮罩与提示 -->
+<div class="sheet-mask" id="mask"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+const $ = id => document.getElementById(id);
+
+/* ===== 共享：遮罩 / Toast / 弹层 ===== */
+let toastTimer;
+function toast(msg){
+  const el = $('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 2200);
+}
+function openSheet(el){ el.classList.add('open'); $('mask').classList.add('open'); }
+function closeSheets(){
+  ['reasonSheet','limitSheet','writeSheet','infoSheet'].forEach(id=>{
+    const el = $(id);
+    if(el) el.classList.remove('open');
+  });
+  $('mask').classList.remove('open');
+}
+$('mask').addEventListener('click', closeSheets);
+
+/* =========================================================
+   Tab 切换：树洞页首次切到才初始化（懒加载）
+   ========================================================= */
+let treeInit = false;
+function switchView(name){
+  const smoke = $('viewSmoke'), tree = $('viewTree');
+  const toTree = name === 'tree';
+  tree.hidden = !toTree;
+  smoke.hidden = toTree;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('sel', t.dataset.view === name));
+  if(toTree){
+    initTree();
+  }else{
+    setTimeout(()=>{ if(chart) chart.resize(); }, 60);
+  }
+}
+$('tabbar').addEventListener('click', e=>{
+  const t = e.target.closest('.tab');
+  if(!t) return;
+  const name = t.dataset.view;
+  if(name === 'smoke' && !$('viewSmoke').hidden) return;
+  if(name === 'tree' && !$('viewTree').hidden) return;
+  switchView(name);
+});
+
+/* =========================================================
+   戒烟记录页
+   ========================================================= */
+const REASONS = ['压力','社交','无聊','饭后','工作','其他'];
+const LS_KEY_SMOKE = 'smoke_tracker_v1';
+const RING_C = 464.9;
+const TRASH = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>';
+
+function pad(n){ return String(n).padStart(2,'0'); }
+function dateKey(d){ return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function todayKey(){ return dateKey(new Date()); }
+
+function seedSmoke(){
+  const now = new Date();
+  const counts = {};
+  const past = [7,9,5,8,6,10];
+  for(let i=6;i>=1;i--){
+    const d = new Date(now); d.setDate(d.getDate()-i);
+    counts[dateKey(d)] = past[6-i];
+  }
+  const offs = [420,300,150,30];
+  const reasons = ['饭后','压力','社交','无聊'];
+  const records = offs.map((m,i)=>({ t: now.getTime()-m*60000, reason: reasons[i] }));
+  const tk = todayKey();
+  counts[tk] = records.length;
+  return { limit:10, counts, records, lastDate:tk };
+}
+
+let smokeState;
+try{ smokeState = JSON.parse(localStorage.getItem(LS_KEY_SMOKE)); }catch(e){ smokeState = null; }
+if(!smokeState || typeof smokeState.limit!=='number' || !smokeState.counts || !smokeState.records){
+  smokeState = seedSmoke();
+}
+const tk0 = todayKey();
+if(smokeState.lastDate !== tk0){
+  if(!smokeState.counts[tk0]) smokeState.counts[tk0] = 0;
+  smokeState.records = [];
+  smokeState.lastDate = tk0;
+}
+const cutoff = dateKey(new Date(Date.now()-15*864e5));
+for(const k in smokeState.counts){ if(k < cutoff) delete smokeState.counts[k]; }
+
+function saveSmoke(){
+  try{ localStorage.setItem(LS_KEY_SMOKE, JSON.stringify(smokeState)); }catch(e){}
+}
+
+let chart = null;
+if(window.echarts){
+  try{ chart = echarts.init($('trendChart')); }catch(e){ chart = null; }
+}
+function renderChart(){
+  if(!chart) return;
+  const days = [], vals = [];
+  let sum = 0;
+  for(let i=6;i>=0;i--){
+    const d = new Date(); d.setDate(d.getDate()-i);
+    const v = smokeState.counts[dateKey(d)] || 0;
+    days.push(i===0 ? '今天' : i===1 ? '昨天' : (d.getMonth()+1)+'/'+d.getDate());
+    vals.push(v); sum += v;
+  }
+  const yMax = Math.max.apply(null, vals.concat(smokeState.limit)) + 2;
+  chart.setOption({
+    grid:{ left:8, right:8, top:12, bottom:0 },
+    tooltip:{ trigger:'axis', axisPointer:{ type:'shadow' }, confine:true,
+      backgroundColor:'#1E2937', borderColor:'rgba(148,163,184,.2)',
+      textStyle:{ color:'#EAF0F7', fontSize:12 },
+      formatter: ps => { const p = ps[0]; return p.name+' 抽了 <b>'+p.value+'</b> 根'; } },
+    xAxis:{ type:'category', data:days,
+      axisLine:{ show:false }, axisTick:{ show:false },
+      axisLabel:{ color:'#5F6E80', fontSize:11, margin:8 } },
+    yAxis:{ type:'value', show:false, min:0, max:yMax, splitLine:{ show:false } },
+    series:[{ type:'bar', barWidth:20,
+      data: vals.map((v,i)=>({ value:v, itemStyle:{
+        color: i===6 ? '#FFB454' : '#2A3648',
+        borderRadius:[6,6,0,0],
+        shadowColor:'rgba(255,180,84,.35)', shadowBlur: i===6 ? 10 : 0 } })) }]
+  });
+  $('chartHint').textContent = '日均 '+(sum/7).toFixed(1)+' 根';
+}
+
+function fmtAgo(ts){
+  const m = Math.floor((Date.now()-ts)/60000);
+  if(m < 1) return '刚刚';
+  if(m < 60) return m+' 分钟前';
+  const h = Math.floor(m/60);
+  if(h < 24) return h+' 小时'+(m%60 ? ' '+m%60+' 分钟' : '')+'前';
+  const d = Math.floor(h/24);
+  return d+' 天'+(h%24 ? ' '+h%24+' 小时' : '')+'前';
+}
+function streak(){
+  let s = 0; const d = new Date();
+  for(let i=0;i<365;i++){
+    const k = dateKey(d);
+    if(!(k in smokeState.counts)) break;
+    if(smokeState.counts[k] > smokeState.limit) break;
+    s++; d.setDate(d.getDate()-1);
+  }
+  return s;
+}
+function renderTimeline(){
+  const box = $('timeline');
+  if(!smokeState.records.length){
+    box.innerHTML = '<div class="empty">今天还没有记录<br>点上方「记录一支」记下第一支</div>';
+    return;
+  }
+  const items = smokeState.records.slice().sort((a,b)=>b.t-a.t);
+  box.innerHTML = items.map(r=>{
+    const d = new Date(r.t);
+    const idx = smokeState.records.indexOf(r);
+    return '<div class="record">'
+      +'<span class="rec-dot"></span>'
+      +'<span class="rec-time">'+pad(d.getHours())+':'+pad(d.getMinutes())+'</span>'
+      +'<span class="rec-reason">'+r.reason+'</span>'
+      +'<button class="rec-del" data-idx="'+idx+'" aria-label="删除记录">'+TRASH+'</button>'
+      +'</div>';
+  }).join('');
+}
+function renderSmoke(animate){
+  const tk = todayKey();
+  const smoked = smokeState.counts[tk] || 0;
+  const limit = smokeState.limit;
+  const left = limit - smoked;
+
+  const pct = Math.min(1, Math.max(0, smoked/limit));
+  const bar = $('ringBar');
+  bar.style.strokeDashoffset = (RING_C*(1-pct)).toFixed(1);
+  const num = $('ringNum');
+  if(left >= 0){
+    num.textContent = left;
+    num.style.color = '';
+    $('ringLabel').textContent = '剩余额度 · 根';
+    $('heroTag').textContent = '剩余额度';
+    bar.setAttribute('stroke','url(#ringGrad)');
+    bar.style.filter = 'drop-shadow(0 0 7px rgba(255,180,84,.45))';
+  }else{
+    num.textContent = '+'+(smoked-limit);
+    num.style.color = 'var(--red)';
+    $('ringLabel').textContent = '超出额度 · 根';
+    $('heroTag').textContent = '已超限';
+    bar.setAttribute('stroke','#FF6B6B');
+    bar.style.filter = 'drop-shadow(0 0 7px rgba(255,107,107,.5))';
+  }
+  if(animate){ num.classList.remove('pop'); void num.offsetWidth; num.classList.add('pop'); }
+
+  $('statTotal').textContent = limit;
+  $('statSmoked').textContent = smoked;
+  $('statLeft').textContent = Math.max(0, left);
+
+  const sl = $('statusLine');
+  if(left > 0){ sl.className = 'status-line ok'; sl.innerHTML = '今日还剩 <b>'+left+'</b> 根，悠着点'; }
+  else if(left === 0){ sl.className = 'status-line warn'; sl.innerHTML = '今日额度已用完，忍一忍，明天再来'; }
+  else { sl.className = 'status-line over'; sl.innerHTML = '已超出限额 <b>'+(-left)+'</b> 根，身体要紧'; }
+
+  if(smokeState.records.length){
+    const last = smokeState.records[smokeState.records.length-1].t;
+    $('awayText').textContent = '距上次吸烟 '+fmtAgo(last);
+  }else{
+    $('awayText').textContent = '今天还没有记录，点上方按钮记下第一支';
+  }
+
+  const now = new Date();
+  const W = ['日','一','二','三','四','五','六'];
+  $('dateMain').textContent = (now.getMonth()+1)+'月'+now.getDate()+'日 周'+W[now.getDay()];
+  const yd = smokeState.counts[dateKey(new Date(now.getTime()-864e5))] || 0;
+  const diff = smoked - yd;
+  $('dateSub').textContent = diff<0 ? '今天已坚持 · 比昨天少 '+(-diff)+' 根'
+    : diff>0 ? '比昨天多 '+diff+' 根，注意节奏' : '与昨天持平，稳住节奏';
+  const st = streak();
+  $('streakText').textContent = st>0 ? '连续 '+st+' 天' : '无连续达标';
+
+  renderChart();
+  $('recCount').textContent = smokeState.records.length+' 条';
+  renderTimeline();
+}
+
+let selReason = REASONS[0];
+$('reasonGrid').innerHTML = REASONS.map((r,i)=>
+  '<button class="reason'+(i===0?' sel':'')+'" data-r="'+r+'">'+r+'</button>').join('');
+$('reasonGrid').addEventListener('click', e=>{
+  const b = e.target.closest('.reason');
+  if(!b) return;
+  selReason = b.dataset.r;
+  document.querySelectorAll('.reason').forEach(x=>x.classList.toggle('sel', x===b));
+});
+$('logBtn').addEventListener('click', ()=>openSheet($('reasonSheet')));
+$('confirmLog').addEventListener('click', ()=>{
+  const tk = todayKey();
+  smokeState.records.push({ t: Date.now(), reason: selReason || REASONS[0] });
+  smokeState.counts[tk] = (smokeState.counts[tk]||0)+1;
+  saveSmoke(); renderSmoke(true); closeSheets();
+  const left = smokeState.limit - smokeState.counts[tk];
+  toast(left>0 ? '已记录 · 今日还剩 '+left+' 根' : left===0 ? '已记录 · 今日额度已用完' : '已记录 · 已超出限额');
+});
+$('undoBtn').addEventListener('click', ()=>{
+  if(!smokeState.records.length){ toast('今天还没有可撤销的记录'); return; }
+  const tk = todayKey();
+  smokeState.records.pop();
+  smokeState.counts[tk] = Math.max(0, (smokeState.counts[tk]||1)-1);
+  saveSmoke(); renderSmoke(true);
+  toast('已撤销上一支记录');
+});
+$('timeline').addEventListener('click', e=>{
+  const del = e.target.closest('.rec-del');
+  if(!del) return;
+  const idx = +del.dataset.idx;
+  if(del.classList.contains('confirm')){
+    const tk = todayKey();
+    smokeState.records.splice(idx,1);
+    smokeState.counts[tk] = Math.max(0, (smokeState.counts[tk]||0)-1);
+    saveSmoke(); renderSmoke(); closeSheets();
+    toast('已删除该记录');
+  }else{
+    del.classList.add('confirm');
+    del.textContent = '确认删除';
+    setTimeout(()=>{
+      del.classList.remove('confirm');
+      del.innerHTML = TRASH;
+    }, 2200);
+  }
+});
+let curLimit = 10;
+function syncSteps(){
+  $('stepMinus').disabled = curLimit <= 1;
+  $('stepPlus').disabled = curLimit >= 30;
+}
+function stepLimit(d){
+  curLimit = Math.min(30, Math.max(1, curLimit+d));
+  $('limitNum').textContent = curLimit;
+  syncSteps();
+}
+$('stepMinus').addEventListener('click', ()=>stepLimit(-1));
+$('stepPlus').addEventListener('click', ()=>stepLimit(1));
+$('openLimit').addEventListener('click', ()=>{
+  curLimit = smokeState.limit;
+  $('limitNum').textContent = curLimit;
+  syncSteps();
+  openSheet($('limitSheet'));
+});
+$('saveLimit').addEventListener('click', ()=>{
+  smokeState.limit = curLimit;
+  saveSmoke(); renderSmoke(); closeSheets();
+  toast('今日额度已设为 '+curLimit+' 根');
+});
+window.addEventListener('resize', ()=>{ if(chart) chart.resize(); });
+renderSmoke();
+
+/* =========================================================
+   树洞留言页（懒加载：首次切到树洞 Tab 才初始化）
+   ========================================================= */
+function initTree(){
+  if(treeInit) return;
+  treeInit = true;
+
+  const TAGS = ['心事','吐槽','求助','戒烟','生活'];
+  const TAG_COLOR = {心事:'#FFB454',吐槽:'#7FB4FF',求助:'#3ECF8E',生活:'#9AA8BA',戒烟:'#F08C3A'};
+  const LS_KEY_TREE = 'tree_hole_v1';
+  const HEART = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
+  const HEART_FILL = '<svg viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>';
+
+  function esc(s){
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  function seedTree(){
+    const now = Date.now(), H = 3600e3, D = 864e5;
+    const raw = [
+      {tag:'心事', off:35*60e3, text:'今天没忍住，又抽了一根。明知对身体不好，还是点了。这大概就是戒烟的难吧。', likes:12},
+      {tag:'戒烟', off:2*H,     text:'戒烟第 9 天，烟瘾上来的时候满脑子都是烟。咬牙坚持住，感觉自己快要赢了。', likes:9},
+      {tag:'吐槽', off:4*H,     text:'加班到十点，领导说明天还要出方案。成年人的崩溃，往往就在一瞬间。', likes:21},
+      {tag:'求助', off:7*H,     text:'想戒烟但总在应酬时破功，有戒友支个招吗？求过来人经验，在线等。', likes:5},
+      {tag:'生活', off:26*H,    text:'今天给爸妈打了电话，聊了半小时家常。原来他们一直在等我的电话。', likes:14},
+      {tag:'心事', off:30*H,    text:'有些话对身边人说不出口，只能在这里说。谢谢这个树洞。', likes:8},
+      {tag:'生活', off:3*D,     text:'把阳台的旧烟灰缸洗了，泡上绿萝。生活总要往前看。', likes:19},
+      {tag:'心事', off:5*D,     text:'辞职的念头在脑子里转了三个月，今天终于交了辞呈。有点怕，但更多的是轻松。', likes:6}
+    ];
+    return {
+      messages: raw.map((r,i)=>({ id:i+1, tag:r.tag, text:r.text, t:now-r.off, likes:r.likes })),
+      liked:{}
+    };
+  }
+
+  let treeState;
+  try{ treeState = JSON.parse(localStorage.getItem(LS_KEY_TREE)); }catch(e){ treeState = null; }
+  if(!treeState || !treeState.messages){ treeState = seedTree(); }
+  function saveTree(){
+    try{ localStorage.setItem(LS_KEY_TREE, JSON.stringify(treeState)); }catch(e){}
+  }
+
+  let filter = '全部';
+  function buildChips(){
+    $('chips').innerHTML = ['全部'].concat(TAGS).map(t=>
+      '<button class="chip'+(t===filter?' sel':'')+'" data-f="'+t+'">'
+      +(t==='全部' ? '' : '<i style="color:'+(TAG_COLOR[t]||'#FFB454')+'"></i>')
+      +t+'</button>').join('');
+  }
+  $('chips').addEventListener('click', e=>{
+    const c = e.target.closest('.chip');
+    if(!c) return;
+    filter = c.dataset.f;
+    buildChips(); renderFeed();
+  });
+
+  let selTag = TAGS[0];
+  function buildTags(){
+    $('tagGrid').innerHTML = TAGS.map((t,i)=>
+      '<button class="tag'+(i===0?' sel':'')+'" data-t="'+t+'">'
+      +'<i style="color:'+(TAG_COLOR[t]||'#FFB454')+'"></i>'+t+'</button>').join('');
+  }
+  $('tagGrid').addEventListener('click', e=>{
+    const b = e.target.closest('.tag');
+    if(!b) return;
+    selTag = b.dataset.t;
+    document.querySelectorAll('.tag').forEach(x=>x.classList.toggle('sel', x===b));
+  });
+
+  function fmtTime(t){
+    const d = new Date(t);
+    const hm = pad(d.getHours())+':'+pad(d.getMinutes());
+    const day0 = x => { const a = new Date(x); a.setHours(0,0,0,0); return a.getTime(); };
+    const diff = Math.round((day0(Date.now())-day0(t))/864e5);
+    if(diff === 0) return '今天 '+hm;
+    if(diff === 1) return '昨天 '+hm;
+    return (d.getMonth()+1)+'/'+d.getDate()+' '+hm;
+  }
+  function renderFeed(){
+    const list = treeState.messages.slice().sort((a,b)=>b.t-a.t)
+      .filter(m=> filter==='全部' || m.tag===filter);
+    const feed = $('feed');
+    if(!list.length){
+      feed.innerHTML = '<div class="empty">这个分类还没有留言<br>点上方「写一条留言」，做第一个发声的人</div>';
+      return;
+    }
+    feed.innerHTML = list.map(m=>{
+      const liked = !!treeState.liked[m.id];
+      return '<div class="msg">'
+        +'<div class="msg-top">'
+        +'<span class="msg-tag"><i style="background:'+(TAG_COLOR[m.tag]||'#FFB454')+'"></i>'+m.tag+'</span>'
+        +'<span class="msg-time">'+fmtTime(m.t)+'</span>'
+        +'</div>'
+        +'<div class="msg-text" data-id="'+m.id+'">'+esc(m.text)+'</div>'
+        +'<button class="more" data-id="'+m.id+'" hidden>展开</button>'
+        +'<div class="msg-foot">'
+        +'<button class="like'+(liked?' liked':'')+'" data-id="'+m.id+'" aria-label="共鸣">'
+        +(liked?HEART_FILL:HEART)+'<span>'+m.likes+'</span></button>'
+        +'</div></div>';
+    }).join('');
+    list.forEach(m=>{
+      const el = feed.querySelector('.msg-text[data-id="'+m.id+'"]');
+      const more = feed.querySelector('.more[data-id="'+m.id+'"]');
+      if(el && el.scrollHeight > el.clientHeight + 2) more.hidden = false;
+    });
+  }
+  $('feed').addEventListener('click', e=>{
+    const like = e.target.closest('.like');
+    if(like){ toggleLike(like); return; }
+    const more = e.target.closest('.more');
+    if(more){
+      const el = $('feed').querySelector('.msg-text[data-id="'+more.dataset.id+'"]');
+      el.classList.toggle('open');
+      more.textContent = el.classList.contains('open') ? '收起' : '展开';
+    }
+  });
+  function toggleLike(btn){
+    const id = +btn.dataset.id;
+    const m = treeState.messages.find(x=>x.id===id);
+    if(!m) return;
+    if(treeState.liked[id]){ treeState.liked[id]=false; m.likes--; }
+    else{ treeState.liked[id]=true; m.likes++; }
+    saveTree(); renderStats(); renderFeed();
+    const nb = $('feed').querySelector('.like[data-id="'+id+'"]');
+    nb.classList.add('pop');
+    setTimeout(()=>nb.classList.remove('pop'), 450);
+  }
+
+  const area = $('writeArea');
+  area.addEventListener('input', ()=>{
+    $('charCount').textContent = area.value.length;
+    $('publishBtn').disabled = !area.value.trim().length;
+  });
+  $('writeBtn').addEventListener('click', ()=>{
+    area.value = ''; $('charCount').textContent = '0'; $('publishBtn').disabled = true;
+    selTag = TAGS[0];
+    document.querySelectorAll('.tag').forEach((x,i)=>x.classList.toggle('sel', i===0));
+    openSheet($('writeSheet'));
+  });
+  $('publishBtn').addEventListener('click', ()=>{
+    const text = area.value.trim();
+    if(!text) return;
+    treeState.messages.push({ id: Date.now(), tag: selTag, text: text, t: Date.now(), likes: 0 });
+    saveTree();
+    filter = '全部'; buildChips(); renderStats(); renderFeed();
+    closeSheets();
+    toast('已丢进树洞，安心了');
+  });
+
+  function renderStats(){
+    const dayStart = new Date(); dayStart.setHours(0,0,0,0);
+    const today = treeState.messages.filter(m=>m.t>=dayStart.getTime()).length;
+    const likes = treeState.messages.reduce((s,m)=>s+m.likes, 0);
+    $('statToday').textContent = today;
+    $('statLikes').textContent = likes;
+    $('statTotal').textContent = treeState.messages.length;
+    const d = new Date();
+    const W = ['日','一','二','三','四','五','六'];
+    $('dateMainT').textContent = (d.getMonth()+1)+'月'+d.getDate()+'日 周'+W[d.getDay()];
+  }
+
+  $('openInfo').addEventListener('click', ()=>openSheet($('infoSheet')));
+  $('closeInfo').addEventListener('click', closeSheets);
+
+  buildChips(); buildTags(); renderStats(); renderFeed();
+}
+
+switchView('smoke');
+})();
+</script>
+</body>
+</html>

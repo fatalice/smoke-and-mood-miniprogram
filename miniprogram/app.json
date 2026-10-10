@@ -1,0 +1,36 @@
+{
+  "pages": [
+    "pages/smoke/index",
+    "pages/tree/index"
+  ],
+  "window": {
+    "backgroundColor": "#0B0F16",
+    "backgroundColorTop": "#0B0F16",
+    "backgroundColorBottom": "#0B0F16",
+    "navigationBarBackgroundColor": "#0B0F16",
+    "navigationBarTitleText": "戒烟树洞",
+    "navigationBarTextStyle": "white",
+    "backgroundTextStyle": "dark",
+    "enablePullDownRefresh": false
+  },
+  "tabBar": {
+    "color": "#2DD4BF",
+    "selectedColor": "#7CF5DE",
+    "backgroundColor": "#10161F",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/smoke/index",
+        "text": "记录戒烟"
+      },
+      {
+        "pagePath": "pages/tree/index",
+        "text": "树洞留言"
+      }
+    ]
+  },
+  "style": "v2",
+  "lazyCodeLoading": "requiredComponents",
+  "cloud": true,
+  "sitemapLocation": "sitemap.json"
+}

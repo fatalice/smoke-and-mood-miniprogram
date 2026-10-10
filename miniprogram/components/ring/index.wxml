@@ -1,0 +1,8 @@
+<!--components/ring/index.wxml-->
+<view class="ring-wrap">
+  <canvas type="2d" id="ringCanvas" class="ring-canvas"></canvas>
+  <view class="ring-center">
+    <text class="ring-num" style="color:{{numColor}}">{{num}}</text>
+    <text class="ring-label">{{label}}</text>
+  </view>
+</view>
