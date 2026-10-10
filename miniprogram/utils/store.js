@@ -13,19 +13,9 @@ const REASONS = ['压力', '社交', '无聊', '饭后', '工作', '其他']
 /* ============ 戒烟记录 ============ */
 
 function seedSmoke() {
-  const now = new Date()
-  const counts = {}
-  const past = [7, 9, 5, 8, 6, 10]
-  for (let i = 6; i >= 1; i--) {
-    const d = new Date(now); d.setDate(d.getDate() - i)
-    counts[dateKey(d)] = past[6 - i]
-  }
-  const offs = [420, 300, 150, 30]
-  const reasons = ['饭后', '压力', '社交', '无聊']
-  const records = offs.map((m, i) => ({ t: now.getTime() - m * 60000, reason: reasons[i] }))
+  // 后端已部署：云端失败时本地兜底不再造假历史，返回空状态
   const tk = todayKey()
-  counts[tk] = records.length
-  return { limit: 10, counts, records, lastDate: tk }
+  return { limit: 10, counts: {}, records: [], lastDate: tk }
 }
 
 function loadSmoke() {
@@ -124,21 +114,8 @@ function smokeSetLimit(limit) {
 /* ============ 树洞留言 ============ */
 
 function seedTree() {
-  const now = Date.now(), H = 3600000, D = 86400000
-  const raw = [
-    { tag: '心事', off: 35 * 60000, text: '今天没忍住，又抽了一根。明知对身体不好，还是点了。这大概就是戒烟的难吧。', likes: 12 },
-    { tag: '戒烟', off: 2 * H, text: '戒烟第 9 天，烟瘾上来的时候满脑子都是烟。咬牙坚持住，感觉自己快要赢了。', likes: 9 },
-    { tag: '吐槽', off: 4 * H, text: '加班到十点，领导说明天还要出方案。成年人的崩溃，往往就在一瞬间。', likes: 21 },
-    { tag: '求助', off: 7 * H, text: '想戒烟但总在应酬时破功，有戒友支个招吗？求过来人经验，在线等。', likes: 5 },
-    { tag: '生活', off: 26 * H, text: '今天给爸妈打了电话，聊了半小时家常。原来他们一直在等我的电话。', likes: 14 },
-    { tag: '心事', off: 30 * H, text: '有些话对身边人说不出口，只能在这里说。谢谢这个树洞。', likes: 8 },
-    { tag: '生活', off: 3 * D, text: '把阳台的旧烟灰缸洗了，泡上绿萝。生活总要往前看。', likes: 19 },
-    { tag: '心事', off: 5 * D, text: '辞职的念头在脑子里转了三个月，今天终于交了辞呈。有点怕，但更多的是轻松。', likes: 6 },
-  ]
-  return {
-    messages: raw.map((r, i) => ({ id: i + 1, tag: r.tag, text: r.text, t: now - r.off, likes: r.likes })),
-    liked: {},
-  }
+  // 后端已部署：云端失败时本地兜底不再造假留言，返回空
+  return { messages: [], liked: {} }
 }
 
 function loadTree() {
