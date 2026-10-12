@@ -1,4 +1,4 @@
-// app.js — 戒烟树洞小程序
+// app.js — 戒烟记录小程序
 // 复用 alveyTools 的云托管环境（同一 env，集合名不同即可隔离数据）
 App({
   onLaunch() {
